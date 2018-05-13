@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bingo.hearthunter.dao.UserDao">
+
+    <resultMap id="UserResultMap" type="User">
+        <collection property="usersList" javaType="ArrayList" column="id" ofType="User" select="listUsers"/>
+    </resultMap>
+
+    <select id="listUsers" resultType="User">
+        SELECT * FROM Users
+        <where>
+            <if test="province != null">
+                province = #{province}
+            </if>
+            <if test="city != null">
+                AND city = #{city}
+            </if>
+            <if test="job != null">
+                AND job like #{job}
+            </if>
+            <if test="skills != null">
+                AND skills like #{skills}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryById" resultType="User">
+        SELECT * FROM Users WHERE id=#{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        INSERT INTO Users (nickname,realname,age,gender,qq,phone,province,city.address,created_time,
+        job,skills,hobby,motto,introduction,id_card_pic0,id_card_pic1,pic0,pic1,pic2,pic3,pic4)
+        VALUES (#{nickname},#{realname},#{age},#{gender},#{qq},#{phone},#{province},#{city},#{address},#{created_time},
+        #{job},#{skills},#{hobby},#{motto},#{introduction},#{id_card_pic0},#{id_card_pic1},#{pic0},#{pic1},#{pic2},
+        #{pic3},#{pic4})
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        INSERT INTO Users () VALUES
+        <foreach item="item" collection="list" separator=",">
+            (#{item.nickname}, #{item.realname})
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE Users
+        <set>
+            <if test="nickname != null"> nickname=#{nickname},</if>
+            <if test="realname != null"> realname=#{realname},</if>
+            <if test="age != null"> age=#{age},</if>
+            <if test="gender != null"> gender=#{gender},</if>
+            <if test="qq != null"> qq=#{qq},</if>
+            <if test="phone != null"> phone=#{phone},</if>
+            <if test="province != null"> province=#{province},</if>
+            <if test="city != null"> city=#{city},</if>
+            <if test="address != null"> address=#{address},</if>
+            <if test="job != null"> job=#{job},</if>
+            <if test="hobby != null"> hobby=#{hobby},</if>
+            <if test="motto != null"> motto=#{motto},</if>
+            <if test="introduction != null"> introduction=#{introduction},</if>
+            <if test="id_card_pic0 != null"> id_card_pic0=#{id_card_pic0},</if>
+            <if test="id_card_pic1 != null"> id_card_pic1=#{id_card_pic1},</if>
+            <if test="pic0 != null">pic0=#{pic0},</if>
+            <if test="pic1 != null">pic1=#{pic1},</if>
+            <if test="pic2 != null">pic2=#{pic2},</if>
+            <if test="pic3 != null">pic3=#{pic3},</if>
+            <if test="pic4 != null">pic4=#{pic4},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM Users WHERE id= #{id}
+    </delete>
+
+</mapper>
